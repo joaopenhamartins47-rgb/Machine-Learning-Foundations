@@ -29,7 +29,7 @@
 #Projeto analise de dados
 import pandas as pd
 
-df = pd.read_csv("cancelamentos.csv")
+df = pd.read_csv("../cancelamentos.csv")
 
 #Tirar uma coluna
 df = df.drop(columns="CustomerID")
