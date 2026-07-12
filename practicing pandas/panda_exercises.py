@@ -18,7 +18,7 @@ df = pd.read_csv("../cancelamentos.csv")
 #
 # print(df[["idade", "total_gasto"]].describe())
 #
-# # Nível 2 — Limpeza consciente
+# # Nível 2 - Limpeza
 #
 # # 1 - Antes de rodar drop_duplicates(), descubra quantas linhas duplicadas existem
 #
@@ -39,14 +39,28 @@ df = pd.read_csv("../cancelamentos.csv")
 #
 # print(df.shape)
 
-# Nível 3 — value_counts e primeiras comparações
+# # Nível 3 - value_counts e primeiras comparações
+#
+# # 1 - Rode value_counts(normalize=True) para sexo, assinatura e duracao_contrato. Qual categoria tem mais representantes em cada uma?
+#
+# print(df['sexo'].value_counts(normalize=True))
+# print(df['assinatura'].value_counts(normalize=True))
+# print(df['duracao_contrato'].value_counts(normalize=True))
+#
+# # 2 - Problema real: qual a taxa de cancelamento (cancelou) separada por sexo?
+#
+# print(df.groupby('sexo')['cancelou'].mean())
+#
+# # 3 - Mesma pergunta, mas por duracao_contrato. Contratos mais longos cancelam menos? Confirme com números.
+#
+# print(df.groupby('duracao_contrato')['cancelou'].mean())
 
-# 1 - Rode value_counts(normalize=True) para sexo, assinatura e duracao_contrato. Qual categoria tem mais representantes em cada uma?
+# Nível 4
 
-print(df['sexo'].value_counts(normalize=True))
-print(df['assinatura'].value_counts(normalize=True))
-print(df['duracao_contrato'].value_counts(normalize=True))
+# Compare a média de total_gasto entre quem cancelou e quem não cancelou. Cliente que cancela gasta mais ou menos, em média?
 
-# 2 - Problema real: qual a taxa de cancelamento (cancelou) separada por sexo?
+print(df.groupby('cancelou')['total_gasto'].median()) # -> Cliente que gasta mais tende a ter menores chances de cancelamento, utilizei median pois é menos influenciada por extremidades do que a média
 
-print(df.groupby('sexo')['cancelou'].mean())
+
+
+
