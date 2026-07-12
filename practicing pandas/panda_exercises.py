@@ -10,7 +10,7 @@ df = pd.read_csv("../cancelamentos.csv")
 # print(df.head(3))
 # print(df.tail(3))
 #
-# # 2 - Descubra quantos valores nulos existem por coluna (não é dropna() direto — é um metodo que conta nulos coluna a coluna).
+# # 2 - Descubra quantos valores nulos existem por coluna.
 #
 # print(df.info())
 #
@@ -61,6 +61,14 @@ df = pd.read_csv("../cancelamentos.csv")
 
 print(df.groupby('cancelou')['total_gasto'].median()) # -> Cliente que gasta mais tende a ter menores chances de cancelamento, utilizei median pois é menos influenciada por extremidades do que a média
 
+# Faça o mesmo com ligacoes_callcenter. Existe alguma relação entre número de ligações pro call center e cancelamento?
 
+print(df.groupby('cancelou')['ligacoes_callcenter'].mean())
 
+# Crie faixas de idade usando pd.cut() (ex: 18-25, 26-35, 36-50, 51+) e calcule a taxa de cancelamento por faixa. Qual faixa etária cancela mais?
+
+df['faixa_idade'] = pd.cut(df['idade'], bins=[18,25,35,45,55,65,100])
+faixa = df.groupby('faixa_idade')['cancelou'].mean()
+print(faixa)
+print(faixa.map("{:.2%}".format))
 
