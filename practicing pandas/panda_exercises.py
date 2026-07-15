@@ -3,6 +3,8 @@
 # 1 - Carregue cancelamentos.csv sem dropar CustomerID ainda. Mostre shape, dtypes e as 3 primeiras/últimas linhas.
 
 import pandas as pd
+from pandas import DataFrame
+from pandas.core.interchange.dataframe_protocol import Column
 
 df = pd.read_csv("../cancelamentos.csv")
 
@@ -59,16 +61,32 @@ df = pd.read_csv("../cancelamentos.csv")
 
 # Compare a média de total_gasto entre quem cancelou e quem não cancelou. Cliente que cancela gasta mais ou menos, em média?
 
-print(df.groupby('cancelou')['total_gasto'].median()) # -> Cliente que gasta mais tende a ter menores chances de cancelamento, utilizei median pois é menos influenciada por extremidades do que a média
+# print(df.groupby('cancelou')['total_gasto'].median()) # -> Cliente que gasta mais tende a ter menores chances de cancelamento, utilizei median pois é menos influenciada por extremidades do que a média
 
 # Faça o mesmo com ligacoes_callcenter. Existe alguma relação entre número de ligações pro call center e cancelamento?
 
-print(df.groupby('cancelou')['ligacoes_callcenter'].mean())
+# print(df.groupby('cancelou')['ligacoes_callcenter'].mean())
 
 # Crie faixas de idade usando pd.cut() (ex: 18-25, 26-35, 36-50, 51+) e calcule a taxa de cancelamento por faixa. Qual faixa etária cancela mais?
 
-df['faixa_idade'] = pd.cut(df['idade'], bins=[18,25,35,45,55,65,100])
-faixa = df.groupby('faixa_idade')['cancelou'].mean()
-print(faixa)
-print(faixa.map("{:.2%}".format))
+# df['faixa_idade'] = pd.cut(df['idade'], bins=[18,25,35,45,55,65,100])
+# faixa = df.groupby('faixa_idade')['cancelou'].mean()
+# print(faixa)
+# print(faixa.map("{:.2%}".format))
+
+# Nivel 5
+
+# 1 - Groupby duplo: taxa de cancelamento cruzando duracao_contrato e sexo ao mesmo tempo (dá pra passar uma lista de colunas pro groupby).
+
+colunas = ['duracao_contrato', 'sexo']
+resumo = df.groupby(colunas)['cancelou'].agg(['mean', 'count', 'median'])
+print(resumo)
+
+# Desafio de generalização: escreva uma função taxa_cancelamento(df, coluna) que recebe o nome de qualquer coluna categórica e devolve a taxa de cancelamento por categoria daquela coluna, ordenada da maior pra menor.
+
+def taxa_cancelamento(df: DataFrame, coluna: list[str]) -> DataFrame:
+    aux = df.groupby(coluna)['cancelou'].agg(['mean', 'count'])
+    return aux.sort_values('mean', ascending=False)
+
+print(taxa_cancelamento(df, ['duracao_contrato', 'sexo']))
 
